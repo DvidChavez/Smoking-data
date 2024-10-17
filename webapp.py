@@ -19,7 +19,10 @@ def render_page1():
     
 @app.route("/p2")
 def render_page2():
-    return render_template('page2.html')
+    year = get_year_options()
+    return render_template('page2.html', year_options=year )
+
+
 
 
 @app.route('/showFact')
@@ -28,10 +31,20 @@ def render_fact():
     Country = request.args.get('Country')
     
     population1980 = Country_stats_1980(Country)
+    population2012 = Country_stats_2012(Country)
     
-    fact1980 = "During 1980, the percentage of smokers of the total population was " + str(population1980[0]) + " with a total of " + str(population1980[1]) + " people."
+    Word1 = ""
+    if population1980[0] > population2012[0]:
+        Word1 = "However,"
+    else:
+        Word1 = "Unfortunately,"
+        
     
-    fact2012 = ""
+    
+    fact1980 = "During 1980, the percentage of smokers out of the country population was " + str(population1980[0]) + "% with a total population of " + str(population1980[1]) + " smokers."
+    
+    fact2012 = Word1 + " in 2012, the percentage of smokers was " + str(population2012[0]) + "% with a population of " + str(population2012[1]) + " smokers!"
+    
     
     return render_template('page1.html', country_options=countries, funFact=fact1980, funFact2=fact2012)
     
@@ -51,9 +64,14 @@ def get_country_options():
 def get_year_options():
     """Return the html code for the drop down menu.  Each option is a country from the smoking data."""
     with open('smoking.json') as smoking_data:
-        year = json.load(smoking_data)
-
+        data = json.load(smoking_data)
+    Year=[]
+    for c in data:
+        if c["Year"] not in Year:
+            Year.append(c["Year"])
     options=""
+    for s in Year:
+        options += Markup("<option value=\"" + str(s) + "\">" + str(s) + "</option>") #Use Markup so <, >, " are not escaped lt, gt, etc.
     return options
     
 def Country_stats_1980(country):
@@ -71,18 +89,20 @@ def Country_stats_1980(country):
     facts = [percentage, population]
     return facts
     
-def Country_stats_2012(state):
+def Country_stats_2012(country):
     """Return the data of a country in the year 2012"""
     with open('smoking.json') as smoking_data:
-        data = json.load(demographics_data)
-    highest=0
-    county = ""
+        data = json.load(smoking_data)
+    percentage=0
+    population = 0
+    print(country)
     for c in data:
-        if c["State"] == state:
-            if c["Age"]["Percent Under 18 Years"] > highest:
-                highest = c["Age"]["Percent Under 18 Years"]
-                county = c["County"]
-    return county
+        if c["Country"] == country:
+            if c["Year"] == 2012:
+                percentage = percentage + c['Data']['Percentage']['Total']
+                population = population + c['Data']['Smokers']['Total']
+    facts = [percentage, population]
+    return facts
 
 
 if __name__=="__main__":
