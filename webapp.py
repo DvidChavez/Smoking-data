@@ -39,14 +39,17 @@ def render_fact():
     else:
         Word1 = "Unfortunately,"
         
+    cigarettesGraph = get_Graph()
+    graphdata = get_data(Country)
     
-    
+    print(graphdata)
+
     fact1980 = "During 1980, the percentage of smokers out of the country population was " + str(population1980[0]) + "% with a total population of " + str(population1980[1]) + " smokers."
     
     fact2012 = Word1 + " in 2012, the percentage of smokers was " + str(population2012[0]) + "% with a population of " + str(population2012[1]) + " smokers!"
     
     
-    return render_template('page1.html', country_options=countries, funFact=fact1980, funFact2=fact2012)
+    return render_template('page1.html', country_options=countries, funFact=fact1980, funFact2=fact2012, graph=cigarettesGraph, graphdata = graphdatanum)
     
 def get_country_options():
     """Return the html code for the drop down menu.  Each option is a state abbreviation from the demographic data."""
@@ -104,6 +107,23 @@ def Country_stats_2012(country):
     facts = [percentage, population]
     return facts
 
+def get_Graph():
+    """Return the Graph command"""
+    graph = Markup("<div id=""chartContainer"" style=""height: 300px; width: 100%;""></div>")
+    #Use Markup so <, >, " are not escaped lt, gt, etc.
+    return graph
+    
+
+def get_data(country):
+    with open('smoking.json') as smoking_data:
+        data = json.load(smoking_data)
+    graphdata = []
+    for c in data:
+        if c["Country"] == country:
+            datapoint = { "label": c["Year"], "y": c["Data"]["Daily cigarettes"]}
+            graphdata = [datapoint]
+            #graphdata.push()
+    return graphdata
 
 if __name__=="__main__":
     app.run(debug=True)
