@@ -15,13 +15,17 @@
  
 window.onload = function () {
 	var chart = new CanvasJS.Chart("chartContainer", {
+		axisY: {
+			minimum: 0
+		},
 		data: [              
 		{
 			// Change type to "doughnut", "line", "splineArea", etc.
 			type: "line",
-			dataPoints: [
-				{{ graphdatanum }} 
-			]
+			dataPoints: {{ graphdatanum | safe }}
+				
+				
+			
 		}
 		]
 	});
@@ -33,7 +37,7 @@ window.onload = function () {
   
   </head>
   <body>
-
+  ,
 <div class="p-5 bg-primary text-white text-center">
   <h1>My First Bootstrap 5 Page</h1>
   <p>Resize this responsive page to see the effect!</p> 
