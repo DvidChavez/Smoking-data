@@ -19,10 +19,20 @@ def render_page1():
     
 @app.route("/p2")
 def render_page2():
-    year = get_year_options()
-    return render_template('page2.html', year_options=year )
+    years = get_year_options()
+    
+    return render_template('page2.html', year_options=years)
 
-
+@app.route("/showFactYear")
+def render_factP2():
+    years = get_year_options()
+    Year = request.args.get('Year')
+    
+    
+    
+    fact3 = "The country with the greatest percentage of smokers in the year " + Year + " is "
+    
+    return render_template('page2.html', year_options=years, year_fact=fact3 )
 
 
 @app.route('/showFact')
@@ -43,13 +53,15 @@ def render_fact():
     graphdata = get_data(Country)
     
     print(graphdata)
-
+    
+    txt1 = "This graph show the daily usage of cigarettes on average per smoker"
     fact1980 = "During 1980, the percentage of smokers out of the " + Country + " population was " + str(population1980[0]) + "% with a total population of " + str(population1980[1]) + " smokers."
     
     fact2012 = Word1 + " in 2012, the percentage of smokers was " + str(population2012[0]) + "% with a population of " + str(population2012[1]) + " smokers!"
     
     
-    return render_template('page1.html', country_options=countries, funFact=fact1980, funFact2=fact2012, graph=cigarettesGraph, graphdatanum=str(graphdata))
+    return render_template('page1.html', country_options=countries, funFact=fact1980, funFact2=fact2012, graph=cigarettesGraph, graphdatanum=str(graphdata), text1=txt1)
+    
     
 def get_country_options():
     """Return the html code for the drop down menu.  Each option is a state abbreviation from the demographic data."""
@@ -125,6 +137,24 @@ def get_data(country):
             
             #graphdata.push()
     return graphdata
+    
+def get_greatest_population(year):
+    """Return the country with highest percentage and its total population based on year input."""
+    with open('smoking.json') as smoking_data:
+        data = json.load(smoking_data)
+    country=""
+    percentage=0
+    population= 0
+    for c in data:
+        if c["Year"] == year:
+            if c['Data']['Percentage']['Total'] > percentage:
+                percentage=c['Data']['Percentage']['Total']
+                population=c['Data']['Smokers']['Total']
+                country = c['Country']
+        
+    facts = [country, percentage, population]
+    return facts
 
 if __name__=="__main__":
     app.run(debug=True)
+
