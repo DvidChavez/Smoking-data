@@ -5,6 +5,9 @@
 {% block content %}
     <!--page content-->
 	<h1>Greatest Percentage of Smokers</h1>
+	
+	<p>Select the year to find out the country with the greatest population of smokers from that time!</p>
+	
 	<form action="/showFactYear">
           <select name="Year"> <!-- add onchange="this.form.submit()" to submit/update the form when an option is selected.  Usefull for then displaying county options. -->
             {{ year_options }}
@@ -13,7 +16,9 @@
           <input type="submit" class="btn btn-success" value="retrieve Information">
         </form>
         <div id="funFact3">
+			<h2>{{ year }}</h2>
             <p>{{ year_fact }}</p>
+			<p>{{ year_fact2 }}</p>
         </div>
 
 {% endblock %}

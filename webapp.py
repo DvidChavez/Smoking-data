@@ -28,11 +28,13 @@ def render_factP2():
     years = get_year_options()
     Year = request.args.get('Year')
     
+    countryhighestpop = get_greatest_population(Year)
     
+    fact3 = "The country with the greatest percentage of smokers in the year " + Year + " is " + countryhighestpop[0] + " with the greatest percetnage of " + str(countryhighestpop[1]) + "% and a total population of " + str(countryhighestpop[2]) + " smokers."
     
-    fact3 = "The country with the greatest percentage of smokers in the year " + Year + " is "
+    fact4 = "The Country with the highest percentage of male smokers during the year " + Year + " is X with a percentage of X% from a populaton of X total. Additionally, the Country with the highest population of women is Xwith a percanage of X% from a population of X." 
     
-    return render_template('page2.html', year_options=years, year_fact=fact3 )
+    return render_template('page2.html', year_options=years, year_fact=fact3, year_fact2 = fact4, year=Year)
 
 
 @app.route('/showFact')
@@ -52,15 +54,15 @@ def render_fact():
     cigarettesGraph = get_Graph()
     graphdata = get_data(Country)
     
-    print(graphdata)
     
-    txt1 = "This graph show the daily usage of cigarettes on average per smoker"
+    txt1 = "This graph shows the daily usage of cigarettes on average per smoker"
+    
     fact1980 = "During 1980, the percentage of smokers out of the " + Country + " population was " + str(population1980[0]) + "% with a total population of " + str(population1980[1]) + " smokers."
     
     fact2012 = Word1 + " in 2012, the percentage of smokers was " + str(population2012[0]) + "% with a population of " + str(population2012[1]) + " smokers!"
     
     
-    return render_template('page1.html', country_options=countries, funFact=fact1980, funFact2=fact2012, graph=cigarettesGraph, graphdatanum=str(graphdata), text1=txt1)
+    return render_template('page1.html', country_options=countries, funFact=fact1980, funFact2=fact2012, graph=cigarettesGraph, graphdatanum=str(graphdata), text1=txt1, selected_Country=Country)
     
     
 def get_country_options():
@@ -95,7 +97,6 @@ def Country_stats_1980(country):
         data = json.load(smoking_data)
     percentage=0
     population = 0
-    print(country)
     for c in data:
         if c["Country"] == country:
             if c["Year"] == 1980:
@@ -110,7 +111,6 @@ def Country_stats_2012(country):
         data = json.load(smoking_data)
     percentage=0
     population = 0
-    print(country)
     for c in data:
         if c["Country"] == country:
             if c["Year"] == 2012:
@@ -148,13 +148,27 @@ def get_greatest_population(year):
     for c in data:
         if c["Year"] == year:
             if c['Data']['Percentage']['Total'] > percentage:
-                percentage=c['Data']['Percentage']['Total']
-                population=c['Data']['Smokers']['Total']
+                percentage= c['Data']['Percentage']['Total']
+                population= c['Data']['Smokers']['Total']
                 country = c['Country']
-        
+    
     facts = [country, percentage, population]
+    print(facts[1])
     return facts
-
+    
+def county_most_under_18(state):
+    """Return the name of a county in the given state with the highest percent of under 18 year olds."""
+    with open('demographics.json') as demographics_data:
+        counties = json.load(demographics_data)
+    highest=0
+    county = ""
+    for c in counties:
+        if c["State"] == state:
+            if c["Age"]["Percent Under 18 Years"] > highest:
+                highest = c["Age"]["Percent Under 18 Years"]
+                county = c["County"]
+    return county
+    
 if __name__=="__main__":
     app.run(debug=True)
 
