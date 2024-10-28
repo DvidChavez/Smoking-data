@@ -28,11 +28,12 @@ def render_factP2():
     years = get_year_options()
     Year = request.args.get('Year')
     
-    countryhighestpop = get_greatest_population(Year)
+    countryhighestpop = get_greatest_population(int(Year))
+    highestGender = get_gender_population(int(Year))
     
     fact3 = "The country with the greatest percentage of smokers in the year " + Year + " is " + countryhighestpop[0] + " with the greatest percetnage of " + str(countryhighestpop[1]) + "% and a total population of " + str(countryhighestpop[2]) + " smokers."
     
-    fact4 = "The Country with the highest percentage of male smokers during the year " + Year + " is X with a percentage of X% from a populaton of X total. Additionally, the Country with the highest population of women is Xwith a percanage of X% from a population of X." 
+    fact4 = "The Country with the highest percentage of male smokers during the year " + Year + " is " + highestGender[0] + " with a percentage of X% from a populaton of X total. Additionally, the Country with the highest population of women is Xwith a percanage of X% from a population of X." 
     
     return render_template('page2.html', year_options=years, year_fact=fact3, year_fact2 = fact4, year=Year)
 
@@ -144,20 +145,43 @@ def get_greatest_population(year):
         data = json.load(smoking_data)
     country=""
     percentage=0
-    population= 0
+    population=0
     for c in data:
         if c["Year"] == year:
-            if c['Data']['Percentage']['Total'] > percentage:
-                percentage= c['Data']['Percentage']['Total']
-                population= c['Data']['Smokers']['Total']
-                country = c['Country']
-    
+            if c["Data"]["Percentage"]["Total"] > population:
+                percentage = c["Data"]["Percentage"]["Total"]
+                population= c["Data"]["Smokers"]["Total"]
+                country = c["Country"]
+                
     facts = [country, percentage, population]
-    print(facts[1])
     return facts
-    
+
+def get_gender_population(year):
+    """Return the country with highest percentage and its total population based on year input."""
+    with open('smoking.json') as smoking_data:
+        data = json.load(smoking_data)
+    countryM=""
+    countryF=""
+    population=0
+    population2=0
+    malepercent = 0
+    femalepercent = 0
+    for c in data:
+        if c["Year"] == year:
+            if c["Data"]["Percentage"]["Male"] > malepercent:
+                malepercent = c["Data"]["Percentage"]["Total"]
+                population= c["Data"]["Smokers"]["Total"]
+                countryM = c["Country"]
+            if c["Data"]["Percentage"]["Female"] > femalepercent:
+                femalepercent = c["Data"]["Percentage"]["Total"]
+                population2 = c["Data"]["Smokers"]["Total"]
+                countryF = c["Country"]
+                
+    facts = [countryM, countryF, malepercent, femalepercent, population, population2]
+    return facts
+
 def county_most_under_18(state):
-    """Return the name of a county in the given state with the highest percent of under 18 year olds."""
+    
     with open('demographics.json') as demographics_data:
         counties = json.load(demographics_data)
     highest=0
