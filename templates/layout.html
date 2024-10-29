@@ -23,9 +23,19 @@ window.onload = function () {
 			// Change type to "doughnut", "line", "splineArea", etc.
 			type: "line",
 			dataPoints: {{ graphdatanum | safe }}
-				
-				
-			
+		}
+		]
+	});
+	chart.render();
+	var chart = new CanvasJS.Chart("chartContainer2", {
+		axisY: {
+			minimum: 0
+		},
+		data: [              
+		{
+			// Change type to "doughnut", "line", "splineArea", etc.
+			type: "line",
+			dataPoints: {{ graphdatanum2 | safe }}
 		}
 		]
 	});

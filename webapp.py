@@ -31,11 +31,16 @@ def render_factP2():
     countryhighestpop = get_greatest_population(int(Year))
     highestGender = get_gender_population(int(Year))
     
+    genderGraph = get_Graph2()
+    graphdata2 = get_gender_graph_data(int(Year))
+    
+    txt2 = "This Graph shows the amount of smokers during " + Year + " for the entire World"
+    
     fact3 = "The country with the greatest percentage of smokers in the year " + Year + " is " + countryhighestpop[0] + " with the greatest percetnage of " + str(countryhighestpop[1]) + "% and a total population of " + str(countryhighestpop[2]) + " smokers."
     
-    fact4 = "The Country with the highest percentage of male smokers during the year " + Year + " is " + highestGender[0] + " with a percentage of X% from a populaton of X total. Additionally, the Country with the highest population of women is Xwith a percanage of X% from a population of X." 
+    fact4 = "The Country with the highest percentage of male smokers during the year " + Year + " is " + highestGender[0] + " with a percentage of " + str(highestGender[2]) + "% from a populaton of " + str(highestGender[4]) + " people total. Additionally, the Country with the highest population of women is " + highestGender[1] + "with a percanage of " + str(highestGender[3]) + "% from a population of " + str(highestGender[5]) + "." 
     
-    return render_template('page2.html', year_options=years, year_fact=fact3, year_fact2 = fact4, year=Year)
+    return render_template('page2.html', year_options=years, year_fact=fact3, year_fact2 = fact4, year=Year, text2=txt2, graphdatanum2= graphdata2, graph2=genderGraph)
 
 
 @app.route('/showFact')
@@ -97,7 +102,7 @@ def Country_stats_1980(country):
     with open('smoking.json') as smoking_data:
         data = json.load(smoking_data)
     percentage=0
-    population = 0
+    population=0
     for c in data:
         if c["Country"] == country:
             if c["Year"] == 1980:
@@ -125,7 +130,6 @@ def get_Graph():
     graph = Markup("<div id=""chartContainer"" style=""height: 300px; width: 100%;""></div>")
     #Use Markup so <, >, " are not escaped lt, gt, etc.
     return graph
-    
 
 def get_data(country):
     with open('smoking.json') as smoking_data:
@@ -135,10 +139,8 @@ def get_data(country):
         if c["Country"] == country:
             datapoint = {"label": c["Year"], "y": c["Data"]["Daily cigarettes"]}
             graphdata.append(datapoint)
-            
-            #graphdata.push()
     return graphdata
-    
+
 def get_greatest_population(year):
     """Return the country with highest percentage and its total population based on year input."""
     with open('smoking.json') as smoking_data:
@@ -152,7 +154,7 @@ def get_greatest_population(year):
                 percentage = c["Data"]["Percentage"]["Total"]
                 population= c["Data"]["Smokers"]["Total"]
                 country = c["Country"]
-                
+
     facts = [country, percentage, population]
     return facts
 
@@ -164,8 +166,8 @@ def get_gender_population(year):
     countryF=""
     population=0
     population2=0
-    malepercent = 0
-    femalepercent = 0
+    malepercent=0
+    femalepercent=0
     for c in data:
         if c["Year"] == year:
             if c["Data"]["Percentage"]["Male"] > malepercent:
@@ -176,23 +178,36 @@ def get_gender_population(year):
                 femalepercent = c["Data"]["Percentage"]["Total"]
                 population2 = c["Data"]["Smokers"]["Total"]
                 countryF = c["Country"]
-                
+
     facts = [countryM, countryF, malepercent, femalepercent, population, population2]
     return facts
 
-def county_most_under_18(state):
+def get_Graph2():
+    """Return the Graph command"""
+    graph = Markup("<div id=""chartContainer2"" style=""height: 300px; width: 100%;""></div>")
+    #Use Markup so <, >, " are not escaped lt, gt, etc.
+    return graph
+
+def get_gender_graph_data(year):
+    with open('smoking.json') as smoking_data:
+        data = json.load(smoking_data)
     
-    with open('demographics.json') as demographics_data:
-        counties = json.load(demographics_data)
-    highest=0
-    county = ""
-    for c in counties:
-        if c["State"] == state:
-            if c["Age"]["Percent Under 18 Years"] > highest:
-                highest = c["Age"]["Percent Under 18 Years"]
-                county = c["County"]
-    return county
+    MaleSmokers = 0
+    nonSmokers = 0
+    FemaleSmokers = 0
+    graphdata = []
     
+    for c in data:
+        FemaleSmokers = ["Data"]["Smokers"]["Female"]
+        MaleSmokers = ["Data"]["Smokers"]["Male"]
+        smokers = FemaleSmokers + MaleSmokers
+        nonSmokers = c["Data"]["Smokers"]["Total"] - smokers
+        
+        if c["Country"] == country:
+            datapoint = {"label": c["Year"], "y": c["Data"]["Daily cigarettes"]}
+            graphdata = 
+    return graphdata
+
 if __name__=="__main__":
     app.run(debug=True)
 
