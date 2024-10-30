@@ -23,6 +23,24 @@ def render_page2():
     
     return render_template('page2.html', year_options=years)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route("/showFactYear")
 def render_factP2():
     years = get_year_options()
@@ -32,7 +50,7 @@ def render_factP2():
     highestGender = get_gender_population(int(Year))
     
     genderGraph = get_Graph2()
-    graphdata2 = get_gender_graph_data(int(Year))
+    ihategraphs = get_gender_graph_data(int(Year))
     
     txt2 = "This Graph shows the amount of smokers during " + Year + " for the entire World"
     
@@ -40,8 +58,13 @@ def render_factP2():
     
     fact4 = "The Country with the highest percentage of male smokers during the year " + Year + " is " + highestGender[0] + " with a percentage of " + str(highestGender[2]) + "% from a populaton of " + str(highestGender[4]) + " people total. Additionally, the Country with the highest population of women is " + highestGender[1] + "with a percanage of " + str(highestGender[3]) + "% from a population of " + str(highestGender[5]) + "." 
     
-    return render_template('page2.html', year_options=years, year_fact=fact3, year_fact2 = fact4, year=Year, text2=txt2, graphdatanum2= graphdata2, graph2=genderGraph)
-
+    
+    Graphdata1 = ihategraphs[0]
+    Graphdata2 = ihategraphs[1]
+    Graphdata3 = ihategraphs[2]
+    Graphdata4 = ihategraphs[3]
+    
+    return render_template('page2.html', year_options=years, year_fact=fact3, year_fact2 = fact4, year=Year, text2=txt2, graph2=genderGraph, genderdata1=Graphdata1, genderdata2=Graphdata2, genderdata3=Graphdata3, genderdata4=Graphdata4)
 
 @app.route('/showFact')
 def render_fact():
@@ -49,7 +72,7 @@ def render_fact():
     Country = request.args.get('Country')
     
     population1980 = Country_stats_1980(Country)
-    population2012 = Country_stats_2012(Country)
+    population2012 = Country_stats_2012(Country) 
     
     Word1 = ""
     if population1980[0] > population2012[0]:
@@ -184,7 +207,7 @@ def get_gender_population(year):
 
 def get_Graph2():
     """Return the Graph command"""
-    graph = Markup("<div id=""chartContainer2"" style=""height: 300px; width: 100%;""></div>")
+    graph = Markup("<div id=""ChartContainer2"" style=""height: 300px; width: 100%;""></div>")
     #Use Markup so <, >, " are not escaped lt, gt, etc.
     return graph
 
@@ -195,17 +218,23 @@ def get_gender_graph_data(year):
     MaleSmokers = 0
     nonSmokers = 0
     FemaleSmokers = 0
+    Xdata = []
     graphdata = []
+    dataNames = ["Non-Smokers", "Smokers", "Female Smokers", "Male Smokers"]
     
     for c in data:
-        FemaleSmokers = ["Data"]["Smokers"]["Female"]
-        MaleSmokers = ["Data"]["Smokers"]["Male"]
-        smokers = FemaleSmokers + MaleSmokers
-        nonSmokers = c["Data"]["Smokers"]["Total"] - smokers
-        
-        if c["Country"] == country:
-            datapoint = {"label": c["Year"], "y": c["Data"]["Daily cigarettes"]}
-            graphdata = 
+        FemaleSmokers = c["Data"]["Smokers"]["Female"]
+        MaleSmokers = c["Data"]["Smokers"]["Male"]
+        smokers = c["Data"]["Smokers"]["Total"]
+        percentSmokers = c["Data"]["Percentage"]["Total"]
+        nonSmokers = (smokers / percentSmokers) * 100
+        Xdata = [nonSmokers, smokers, FemaleSmokers, MaleSmokers]
+        if c["Country"] == "Mexico":
+            datapoint1 = {"label": dataNames[0], "y": Xdata[0]}
+            datapoint2 = {"label": dataNames[1], "y": Xdata[1]}
+            datapoint3 = {"label": dataNames[2], "y": Xdata[2]}
+            datapoint4 = {"label": dataNames[3], "y": Xdata[3]}
+    graphdata = [datapoint1, datapoint2, datapoint3, datapoint4]
     return graphdata
 
 if __name__=="__main__":
