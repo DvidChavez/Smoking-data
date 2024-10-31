@@ -56,7 +56,7 @@ def render_factP2():
     
     fact3 = "The country with the greatest percentage of smokers in the year " + Year + " is " + countryhighestpop[0] + " with the greatest percetnage of " + str(countryhighestpop[1]) + "% and a total population of " + str(countryhighestpop[2]) + " smokers."
     
-    fact4 = "The Country with the highest percentage of male smokers during the year " + Year + " is " + highestGender[0] + " with a percentage of " + str(highestGender[2]) + "% from a populaton of " + str(highestGender[4]) + " people total. Additionally, the Country with the highest population of women is " + highestGender[1] + "with a percanage of " + str(highestGender[3]) + "% from a population of " + str(highestGender[5]) + "." 
+    fact4 = "The Country with the highest percentage of male smokers during the year " + Year + " is " + highestGender[0] + " with a percentage of " + str(highestGender[2]) + "% with a total of " + str(highestGender[4]) + " people. Additionally, the Country with the highest percentage of women is " + highestGender[1] + " with a percanage of " + str(highestGender[3]) + "% with a total population of " + str(highestGender[5]) + " smokers." 
     
     
     Graphdata1 = ihategraphs[0]
@@ -227,13 +227,14 @@ def get_gender_graph_data(year):
         MaleSmokers = c["Data"]["Smokers"]["Male"]
         smokers = c["Data"]["Smokers"]["Total"]
         percentSmokers = c["Data"]["Percentage"]["Total"]
-        nonSmokers = (smokers / percentSmokers) * 100
+        nonSmokers = 0
         Xdata = [nonSmokers, smokers, FemaleSmokers, MaleSmokers]
-        if c["Country"] == "Mexico":
-            datapoint1 = {"label": dataNames[0], "y": Xdata[0]}
-            datapoint2 = {"label": dataNames[1], "y": Xdata[1]}
-            datapoint3 = {"label": dataNames[2], "y": Xdata[2]}
-            datapoint4 = {"label": dataNames[3], "y": Xdata[3]}
+        if c["Year"] == year:
+            if c["Country"] == "World":
+                datapoint1 = {"label": dataNames[0], "y": Xdata[0]}
+                datapoint2 = {"label": dataNames[1], "y": Xdata[1]}
+                datapoint3 = {"label": dataNames[2], "y": Xdata[2]}
+                datapoint4 = {"label": dataNames[3], "y": Xdata[3]}
     graphdata = [datapoint1, datapoint2, datapoint3, datapoint4]
     return graphdata
 
