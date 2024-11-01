@@ -12,44 +12,10 @@
   
   <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 <script type="text/javascript">
- 
-window.onload = function () {
-	var chart = new CanvasJS.Chart("chartContainer", {
-		axisY: {
-			minimum: 0
-		},
-		data: [
-		{
-			// Change type to "doughnut", "line", "splineArea", etc.
-			type: "line",
-			dataPoints: [ {{ graphdatanum | safe }} ]
-		}
-		]
-	});
-	chart.render();
-}
 
-window.onload = function () {
-	var chart = new CanvasJS.Chart("ChartContainer2", {
-		axisY: {
-			minimum: 0
-		},
-		data: [              
-		{
-			// Change type to "doughnut", "line", "splineArea", etc.
-			type: "column",
-			dataPoints: [
-				
-				{{ genderdata1 | safe }},
-				{{ genderdata2 | safe }},
-				{{ genderdata3 | safe }},
-				{{ genderdata4 | safe }}
-			]
-		}
-		]
-	});
-	chart.render();
-}
+		{% block graph1 %}{% endblock %}
+		{% block graph2 %}{% endblock %}
+ 
 </script>
   
   <title>{% block title %}{% endblock %} - My Webpage</title>

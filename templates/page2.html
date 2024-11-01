@@ -1,5 +1,31 @@
 {% extends "layout.html" %}
 
+{% block graph2 %}
+
+window.onload = function () {
+	var chart = new CanvasJS.Chart("ChartContainer2", {
+		axisY: {
+			minimum: 0
+		},
+		data: [              
+		{
+			// Change type to "doughnut", "line", "splineArea", etc.
+			type: "column",
+			dataPoints: [
+				
+				{{ genderdata1 | safe }},
+				{{ genderdata2 | safe }},
+				{{ genderdata3 | safe }},
+				{{ genderdata4 | safe }}
+			]
+		}
+		]
+	});
+	chart.render();
+}
+
+{% endblock %}
+
 {% block title %}Page2{% endblock %}
 
 {% block content %}

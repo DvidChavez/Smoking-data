@@ -52,7 +52,7 @@ def render_factP2():
     genderGraph = get_Graph2()
     ihategraphs = get_gender_graph_data(int(Year))
     
-    txt2 = "This Graph shows the amount of smokers during " + Year + " for the entire World"
+    txt2 = "This Graph shows the percentage of smokers during " + Year + " of the entire World"
     
     fact3 = "The country with the greatest percentage of smokers in the year " + Year + " is " + countryhighestpop[0] + " with the greatest percetnage of " + str(countryhighestpop[1]) + "% and a total population of " + str(countryhighestpop[2]) + " smokers."
     
@@ -223,18 +223,17 @@ def get_gender_graph_data(year):
     dataNames = ["Non-Smokers", "Smokers", "Female Smokers", "Male Smokers"]
     
     for c in data:
-        FemaleSmokers = c["Data"]["Smokers"]["Female"]
-        MaleSmokers = c["Data"]["Smokers"]["Male"]
-        smokers = c["Data"]["Smokers"]["Total"]
-        percentSmokers = c["Data"]["Percentage"]["Total"]
-        nonSmokers = 0
+        FemaleSmokers = c["Data"]["Percentage"]["Female"]
+        MaleSmokers = c["Data"]["Percentage"]["Male"]
+        smokers = c["Data"]["Percentage"]["Total"]
+        nonSmokers = 100 - MaleSmokers
         Xdata = [nonSmokers, smokers, FemaleSmokers, MaleSmokers]
         if c["Year"] == year:
             if c["Country"] == "World":
-                datapoint1 = {"label": dataNames[0], "y": Xdata[0]}
-                datapoint2 = {"label": dataNames[1], "y": Xdata[1]}
-                datapoint3 = {"label": dataNames[2], "y": Xdata[2]}
-                datapoint4 = {"label": dataNames[3], "y": Xdata[3]}
+                datapoint1 = {"label": dataNames[0] + "(% of population)", "y": Xdata[0]}
+                datapoint2 = {"label": dataNames[1] + "(% of population)", "y": Xdata[1]}
+                datapoint3 = {"label": dataNames[2] + "(% of female population)", "y": Xdata[2]}
+                datapoint4 = {"label": dataNames[3] + "(% of male population)", "y": Xdata[3]}
     graphdata = [datapoint1, datapoint2, datapoint3, datapoint4]
     return graphdata
 
