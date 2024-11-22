@@ -5,12 +5,19 @@
 window.onload = function () {
 	var chart = new CanvasJS.Chart("ChartContainer2", {
 		axisY: {
-			minimum: 0
+			minimum: 0,
+			title: "Percentage%",
+			suffix: "%",
+			maximum: 100
+		},
+		axisX: {
+			title: "Population type"
 		},
 		data: [              
 		{
 			// Change type to "doughnut", "line", "splineArea", etc.
 			type: "column",
+			yValueFormatString: "#,##0.##\"%\"",
 			dataPoints: [
 				
 				{{ genderdata1 | safe }},

@@ -5,13 +5,17 @@
 window.onload = function () {
 	var chart = new CanvasJS.Chart("chartContainer", {
 		axisY: {
-			minimum: 0
+			minimum: 0,
+			title: "Number of cigerattes"
+		},
+		axisX: {
+			title: "Year"
 		},
 		data: [
 		{
 			// Change type to "doughnut", "line", "splineArea", etc.
 			type: "line",
-			dataPoints:  {{ graphdatanum | safe }} 
+			dataPoints:  {{ graphdatanum | safe }}
 		}
 		]
 	});

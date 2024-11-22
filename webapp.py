@@ -173,7 +173,7 @@ def get_greatest_population(year):
     population=0
     for c in data:
         if c["Year"] == year:
-            if c["Data"]["Percentage"]["Total"] > population:
+            if c["Country"] == "World":
                 percentage = c["Data"]["Percentage"]["Total"]
                 population= c["Data"]["Smokers"]["Total"]
                 country = c["Country"]
@@ -226,7 +226,7 @@ def get_gender_graph_data(year):
         FemaleSmokers = c["Data"]["Percentage"]["Female"]
         MaleSmokers = c["Data"]["Percentage"]["Male"]
         smokers = c["Data"]["Percentage"]["Total"]
-        nonSmokers = 100 - MaleSmokers
+        nonSmokers = 100 - smokers
         Xdata = [nonSmokers, smokers, FemaleSmokers, MaleSmokers]
         if c["Year"] == year:
             if c["Country"] == "World":
